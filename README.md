@@ -67,8 +67,9 @@ A modern, full-stack employee management system built with the MERN stack (Mongo
 Before running this application, ensure you have:
 
 - [Node.js](https://nodejs.org/) (v18 or higher)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) (includes Kubernetes)
 - [Git](https://git-scm.com/)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/) (optional, for Kubernetes deployment)
 
 ## 🚀 How to Run the Application
 
@@ -275,6 +276,44 @@ npm run install-all
 # Backend: curl http://localhost:5000/health
 # Frontend: Open browser to http://localhost:3000
 ```
+
+---
+
+## ☸️ Method 3: Running with Kubernetes
+
+This method uses Kubernetes manifests to deploy the application.
+
+### Prerequisites
+- Kubernetes cluster running (Docker Desktop or Minikube)
+- `kubectl` command-line tool configured
+
+### Step-by-Step Instructions
+
+#### 1. Build Docker Images
+Since the deployment uses local images (`imagePullPolicy: Never`), you must build them first:
+```bash
+docker build -t tuheen27/mern-backend:latest ./backend
+docker build -t tuheen27/mern-frontend:latest ./frontend
+```
+
+#### 2. Apply Kubernetes Manifests
+```bash
+# Deploy all services and deployments
+kubectl apply -f k8s/
+```
+
+#### 3. Verify Deployment
+```bash
+# Check pods status
+kubectl get pods
+
+# Check services
+kubectl get services
+```
+
+#### 4. Access the Application
+- **Frontend**: http://localhost (via LoadBalancer) or http://localhost:30300 (via NodePort)
+- **Backend API**: http://localhost:30500 (via NodePort)
 
 ---
 
@@ -603,6 +642,19 @@ This application is production-ready with:
 - **DigitalOcean App Platform** for simplified deployment
 
 ### CI/CD Integration
+The project includes a `Jenkinsfile` for automated testing and building.
+
+#### Jenkins Pipeline Stages
+1. **Checkout**: Pulls code from the repository.
+2. **Install Dependencies**: Installs npm packages for both backend and frontend in parallel.
+3. **Unit Tests**: Runs tests for backend and frontend in parallel.
+4. **Build**: Builds the frontend application.
+
+#### Setup
+1. Create a new Pipeline job in Jenkins.
+2. Point it to your Git repository.
+3. Jenkins will automatically detect and run the `Jenkinsfile`.
+
 Ready for integration with:
 - **GitHub Actions** for automated testing and deployment
 - **Jenkins** for enterprise CI/CD pipelines
