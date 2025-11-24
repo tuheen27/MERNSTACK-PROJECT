@@ -672,13 +672,6 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
-## 📞 Support
-
-### Getting Help
-- **GitHub Issues**: [Create an issue](https://github.com/tuheen27/MERNSTACK-PROJECT/issues)
-- **Documentation**: Check this README and inline code comments
-- **Community**: Join discussions in the repository
-
 ### Contributing
 1. **Fork** the repository
 2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)

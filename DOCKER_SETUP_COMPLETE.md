@@ -91,7 +91,7 @@ docker-compose down
 
 # Rebuild and restart
 docker-compose build --no-cache
-docker-compose up -d
+c
 ```
 
 ## Build Details
