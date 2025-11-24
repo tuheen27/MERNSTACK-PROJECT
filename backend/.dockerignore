@@ -103,8 +103,7 @@ CHANGELOG.md
 LICENSE
 *.md
 
-# Package managers
-package-lock.json
+# Package managers (keep package-lock.json for Docker builds)
 yarn.lock
 pnpm-lock.yaml
 

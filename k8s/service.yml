@@ -1,0 +1,97 @@
+# Kubernetes Services for MERN Employee Dashboard
+
+# MongoDB Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+  labels:
+    app: mongodb
+    component: database
+spec:
+  selector:
+    app: mongodb
+  ports:
+  - name: mongo
+    port: 27017
+    targetPort: 27017
+    protocol: TCP
+  type: ClusterIP
+
+---
+# Backend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  labels:
+    app: backend
+    component: api
+spec:
+  selector:
+    app: backend
+  ports:
+  - name: backend-api
+    port: 5000
+    targetPort: 5000
+    protocol: TCP
+  type: ClusterIP
+
+---
+# Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  labels:
+    app: frontend
+    component: ui
+spec:
+  selector:
+    app: frontend
+  ports:
+  - name: frontend-web
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  type: LoadBalancer
+
+---
+# Optional: NodePort Service for Backend (for development access)
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-nodeport
+  labels:
+    app: backend
+    component: api-external
+spec:
+  selector:
+    app: backend
+  ports:
+  - name: backend-api
+    port: 5000
+    targetPort: 5000
+    nodePort: 30500
+    protocol: TCP
+  type: NodePort
+
+---
+# Optional: NodePort Service for Frontend (for development access)
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-nodeport
+  labels:
+    app: frontend
+    component: ui-external
+spec:
+  selector:
+    app: frontend
+  ports:
+  - name: frontend-web
+    port: 80
+    targetPort: 80
+    nodePort: 30300
+    protocol: TCP
+  type: NodePort

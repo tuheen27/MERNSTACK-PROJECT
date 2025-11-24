@@ -1,8 +1,9 @@
-# MongoDB Docker Setup for MERN Employee Dashboard
+# Full Stack MERN Employee Dashboard Docker Setup
 
 version: '3.8'
 
 services:
+  # MongoDB Database
   mongodb:
     image: mongo:7.0
     container_name: employee_dashboard_mongodb
@@ -16,6 +17,47 @@ services:
     volumes:
       - mongodb_data:/data/db
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - employee_network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: employee_dashboard_backend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/employee_dashboard?authSource=admin
+    ports:
+      - "5000:5000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - employee_network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  # Frontend React Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: employee_dashboard_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
     networks:
       - employee_network
 
@@ -32,7 +74,8 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://admin:password123@mongodb:27017/
       ME_CONFIG_BASICAUTH: false
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     networks:
       - employee_network
 
